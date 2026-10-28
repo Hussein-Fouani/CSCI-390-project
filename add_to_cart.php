@@ -1,4 +1,4 @@
 <?php
 
-include '/xampp/htdocs/Practice/configuration.php';
+include 'configuration.php';
 ?>

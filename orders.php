@@ -1,6 +1,6 @@
 <?php
 
-include '/xampp/htdocs/Practice/configuration.php';
+include 'configuration.php';
 
 session_start();
 
@@ -20,7 +20,7 @@ if (!isset($user_id)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>orders</title>
-    <link rel="stylesheet href=" /css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>

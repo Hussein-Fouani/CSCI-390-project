@@ -1,6 +1,6 @@
 <?php
 
-include '/xampp/htdocs/Practice/configuration.php';
+include 'configuration.php';
 
 session_start();
 
@@ -13,13 +13,13 @@ if (!isset($user_id)) {
 if (isset($_POST['update_cart'])) {
     $cart_id = $_POST['cart_id'];
     $cart_quantity = $_POST['cart_quantity'];
-    mysqli_query($conn, "UPDATE `cart` SET quantity = '$cart_quantity' WHERE id = '$cart_id'") or die('query failed');
+    mysqli_execute_query($conn, "UPDATE `cart` SET quantity = ? WHERE id = ?", [$cart_quantity, $cart_id]) or die('query failed');
     $message[] = 'cart quantity updated!';
 }
 
 if (isset($_GET['delete'])) {
     $delete_id = $_GET['delete'];
-    mysqli_query($conn, "DELETE FROM `cart` WHERE id = '$delete_id'") or die('query failed');
+    mysqli_execute_query($conn, "DELETE FROM `cart` WHERE id = ?", [$delete_id]) or die('query failed');
     header('location:cart.php');
 }
 
@@ -38,7 +38,7 @@ if (isset($_GET['delete_all'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cart</title>
-    <link rel="stylesheet href=" /css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 
 </head>
 
@@ -63,8 +63,8 @@ if (isset($_GET['delete_all'])) {
                 while ($fetch_cart = mysqli_fetch_assoc($select_cart)) {
             ?>
                     <div class="box">
-                        <a href="cart.php?delete=<?php echo $fetch_cart['id']; ?>" </a>
-                            <img src="/images/<?php echo $fetch_cart['image']; ?>" alt="">
+                        <a href="cart.php?delete=<?php echo $fetch_cart['id']; ?>" class="delete-btn">delete</a>
+                            <img src="images/<?php echo $fetch_cart['image']; ?>" alt="">
                             <div class="name"><?php echo $fetch_cart['name']; ?></div>
                             <div class="price">$<?php echo $fetch_cart['price']; ?>/-</div>
                             <form action="" method="post">
@@ -84,7 +84,7 @@ if (isset($_GET['delete_all'])) {
         </div>
 
         <div style="margin-top: 2rem; text-align:center;">
-            <a href="cart.php?delete_all" class="delete-btn <?php echo ($grand_total > 1) ? '' : 'disabled'; ?>delete all</a>
+            <a href="cart.php?delete_all" class="delete-btn <?php echo ($grand_total > 1) ? '' : 'disabled'; ?>">delete all</a>
         </div>
 
         <div class=" cart-total">

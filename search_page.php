@@ -1,6 +1,6 @@
 <?php
 
-include '/xampp/htdocs/Practice/configuration.php';
+include 'configuration.php';
 
 session_start();
 
@@ -17,12 +17,12 @@ if (isset($_POST['add_to_cart'])) {
     $product_image = $_POST['product_image'];
     $product_quantity = $_POST['product_quantity'];
 
-    $check_cart_numbers = mysqli_query($conn, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
+    $check_cart_numbers = mysqli_execute_query($conn, "SELECT * FROM `cart` WHERE name = ? AND user_id = ?", [$product_name, $user_id]) or die('query failed');
 
     if (mysqli_num_rows($check_cart_numbers) > 0) {
         $message[] = 'already added to cart!';
     } else {
-        mysqli_query($conn, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
+        mysqli_execute_query($conn, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES(?, ?, ?, ?, ?)", [$user_id, $product_name, $product_price, $product_quantity, $product_image]) or die('query failed');
         $message[] = 'product added to cart!';
     }
 };
@@ -37,7 +37,7 @@ if (isset($_POST['add_to_cart'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>search page</title>
-    <link rel="stylesheet href=" /css/style.css">" href="/style.css">
+    <link rel="stylesheet" href="css/style.css">
 
 </head>
 
@@ -63,12 +63,12 @@ if (isset($_POST['add_to_cart'])) {
             <?php
             if (isset($_POST['submit'])) {
                 $search_item = $_POST['search'];
-                $select_products = mysqli_query($conn, "SELECT * FROM `products` WHERE name LIKE '%{$search_item}%'") or die('query failed');
+                $select_products = mysqli_execute_query($conn, "SELECT * FROM `products` WHERE name LIKE ?", ['%' . $search_item . '%']) or die('query failed');
                 if (mysqli_num_rows($select_products) > 0) {
                     while ($fetch_product = mysqli_fetch_assoc($select_products)) {
             ?>
                         <form action="" method="post" class="box">
-                            <img src="uploaded_img/<?php echo $fetch_product['image']; ?>" alt="" class="image">
+                            <img src="images/<?php echo $fetch_product['image']; ?>" alt="" class="image">
                             <div class="name"><?php echo $fetch_product['name']; ?></div>
                             <div class="price">$<?php echo $fetch_product['price']; ?>/-</div>
                             <input type="number" class="qty" name="product_quantity" min="1" value="1">
